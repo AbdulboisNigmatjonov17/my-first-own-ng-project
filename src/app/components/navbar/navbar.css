@@ -1,0 +1,25 @@
+nav{
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav h1{
+    font-size: 30px;
+}
+nav .links{
+    width: 400px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+nav .links a{
+    font-weight: 400;
+}
+
+nav .links a:hover{
+    font-weight: 500;
+}

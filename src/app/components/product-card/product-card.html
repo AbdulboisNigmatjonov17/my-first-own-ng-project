@@ -1,0 +1,10 @@
+<mat-card class="example-card" appearance="outlined">
+    <img mat-card-image [src]="product.image" [alt]="product.name" class="example-header-image">
+    <mat-card-content class="card-content">
+        <h3>{{ product.price| currency:'USD':'symbol':'1.0-0' }}</h3>
+        <p>{{ product.name }}</p>
+    </mat-card-content>
+    <mat-card-actions class="card-btns">
+        <button matButton="outlined" (click)="onSubmit()">Add to Cart</button>
+    </mat-card-actions>
+</mat-card>
