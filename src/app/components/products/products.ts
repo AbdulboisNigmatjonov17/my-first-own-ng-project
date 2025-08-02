@@ -14,26 +14,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
   styleUrls: ['./products.css'],
 })
 export class Products  {
-  // products = signal<Product[]>([]);
   ProductService = inject(ProductService);
+  products = toSignal(this.ProductService.getProducts(), {initialValue: []})
 
-  products = toSignal(this.ProductService.getProducts(), {initialValue: []});
-
-  // products: Product[] = [];
-  isLoading = true;
-
-  // constructor(private ProductService: ProductService) {}
-
-  // ngOnInit() {
-  //   this.ProductService.getProducts().subscribe({
-  //     next: (data) => {
-  //       this.products = data;
-  //       this.isLoading = false
-  //     },
-  //     error: (error) => {
-  //       console.log('Error karochi: ', error);
-  //       this.isLoading = false
-  //     }
-  //   })
-  // }
 }
