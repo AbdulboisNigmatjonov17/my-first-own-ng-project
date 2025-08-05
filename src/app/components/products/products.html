@@ -6,7 +6,7 @@
     <div *ngIf="products().length">
         <div class="cards">
             @for (item of products(); track item.id) {
-                <app-product-card [product]="item"></app-product-card>
+                <app-product-card [product]="item" ></app-product-card>
             }
         </div>
     </div>
