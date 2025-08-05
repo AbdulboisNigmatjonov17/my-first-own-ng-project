@@ -1,4 +1,14 @@
 <div class="container">
-    <app-navbar></app-navbar>
-    <p>shop works!</p>
+    <app-navbar />
+    <h2>Shopping Cart</h2>
+
+    <div *ngIf="!cart().length">
+        <p>Cart is empty</p>
+    </div>
+
+    <ul *ngIf="cart().length" class="cards">
+        <li *ngFor="let item of cart()">
+            <app-product-card [product]="item.product"></app-product-card>
+        </li>
+    </ul>
 </div>

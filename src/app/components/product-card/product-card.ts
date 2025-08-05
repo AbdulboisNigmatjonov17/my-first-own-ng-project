@@ -1,10 +1,11 @@
-import { Component, Input, Pipe } from '@angular/core';
+import { Component, inject, Input, Pipe } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { CurrencyPipe } from '@angular/common';
 import { Product } from '../../models/product';
+import { CartService } from '../../services/cart/cart.service';
 
 @Component({
   selector: 'app-product-card',
@@ -15,9 +16,13 @@ import { Product } from '../../models/product';
 })
 export class ProductCard {
   @Input() product!: Product;
-  
+  private cartService = inject(CartService);
 
-    onSubmit() {
-      console.log('Product added to cart:', this.product.id);
-    }
+  onSubmit(product: Product): void {
+    const cartItem = { product, quantity: 1 };
+    this.cartService.addToCart(cartItem, product.id).subscribe(() => {
+      console.log('Product added to cart', product.id);
+    });
+  }
+
 }
