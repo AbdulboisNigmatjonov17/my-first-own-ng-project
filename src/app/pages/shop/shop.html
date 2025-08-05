@@ -7,8 +7,34 @@
     </div>
 
     <ul *ngIf="cart().length" class="cards">
+        <div>
+            <h3>Total: {{totalPrice()| currency:'USD':'symbol':'1.0-0' }}</h3>
+        </div>
         <li *ngFor="let item of cart()">
-            <app-product-card [product]="item.product"></app-product-card>
+            <mat-card class="example-card" appearance="outlined">
+                <mat-card-header>
+                    <mat-card-title-group>
+                        <mat-card-title>Shiba Inu</mat-card-title>
+                        <mat-card-subtitle>{{item.product.category}}</mat-card-subtitle>
+                        <mat-card-title>
+                            <h3>{{item.product.price| currency:'USD':'symbol':'1.0-0' }}</h3>
+                            <p>{{ item.product.name }}</p>
+                        </mat-card-title>
+                        <img mat-card-sm-image [ngSrc]="item.product.image" [width]="80" [height]="80">
+                    </mat-card-title-group>
+                </mat-card-header>
+                <mat-card-actions class="card-btns">
+                    <button matButton="outlined" (click)="remove(item.id)">Remove</button>
+                    <div class="quantity">
+                        <button matButton="outlined" (click)="decreaseQuantity(item.id, item.quantity)">-</button>
+                        <p>{{item.quantity}}</p>
+                        <button matButton="outlined" (click)="increaseQuantity(item.id, item.quantity)">+</button>
+                    </div>
+                </mat-card-actions>
+            </mat-card>
         </li>
+        <div>
+            <button matButton="outlined" (click)="clearCart()">Clear Cart</button>
+        </div>
     </ul>
 </div>

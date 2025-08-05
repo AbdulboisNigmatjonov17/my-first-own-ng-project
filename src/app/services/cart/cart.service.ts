@@ -29,7 +29,7 @@ export class CartService {
             map(() => true)
           )
         } else {
-          return this.updateCart(existCart.id, existCart.quantity + 1).pipe(
+          return this.updateQuantity(existCart.id, existCart.quantity + 1).pipe(
             map(() => false)
           )
         }
@@ -41,7 +41,7 @@ export class CartService {
     return this.http.post<ICart>(`${this.apiUrl}/cart`, cart)
   }
 
-  removeFromCart(cartId: Product): Observable<void> {
+  removeFromCart(cartId: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/cart/${cartId}`)
   }
 
@@ -49,7 +49,7 @@ export class CartService {
     return this.http.delete(`${this.apiUrl}/cart`)
   }
 
-  updateCart(cartId: string, quantity: number): Observable<ICart> {
+  updateQuantity(cartId: string, quantity: number): Observable<ICart> {
     return this.http.patch<ICart>(`${this.apiUrl}/cart/${cartId}`, { quantity })
   }
 }

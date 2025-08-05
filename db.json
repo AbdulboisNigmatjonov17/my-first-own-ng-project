@@ -1,21 +1,21 @@
 {
   "products": [
     {
-      "id": 1,
+      "id": "1",
       "name": "The Shiba Inu",
       "price": 100,
       "category": "Dog",
       "image": "https://material.angular.io/assets/img/examples/shiba2.jpg"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "The Male Cat",
       "price": 200,
       "category": "Cat",
       "image": "https://images.unsplash.com/photo-1716467891152-1b43a96de578?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWFsZSUyMGNhdHxlbnwwfHwwfHx8MA%3D%3D"
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "The Fox",
       "price": 300,
       "category": "Fox",
@@ -24,37 +24,26 @@
   ],
   "cart": [
     {
-      "id": "37e3",
+      "id": "fde8",
       "product": {
-        "id": 1,
-        "name": "The Shiba Inu",
-        "price": 100,
-        "category": "Dog",
-        "image": "https://material.angular.io/assets/img/examples/shiba2.jpg"
-      },
-      "quantity": 3
-    },
-    {
-      "id": "96c7",
-      "product": {
-        "id": 2,
+        "id": "2",
         "name": "The Male Cat",
         "price": 200,
         "category": "Cat",
         "image": "https://images.unsplash.com/photo-1716467891152-1b43a96de578?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWFsZSUyMGNhdHxlbnwwfHwwfHx8MA%3D%3D"
       },
-      "quantity": 3
+      "quantity": 6
     },
     {
-      "id": "17c7",
+      "id": "56b3",
       "product": {
-        "id": 3,
-        "name": "The Fox",
-        "price": 300,
-        "category": "Fox",
-        "image": "https://st5.depositphotos.com/1008660/67313/i/450/depositphotos_673131316-stock-photo-red-fox-vulpes-vulpes-forest.jpg"
+        "id": "1",
+        "name": "The Shiba Inu",
+        "price": 100,
+        "category": "Dog",
+        "image": "https://material.angular.io/assets/img/examples/shiba2.jpg"
       },
-      "quantity": 5
+      "quantity": 6
     }
   ]
 }
