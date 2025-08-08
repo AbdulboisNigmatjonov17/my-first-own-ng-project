@@ -1,10 +1,8 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Navbar } from '../../components/navbar/navbar';
 import { CartService } from '../../services/cart/cart.service';
 import { ICart } from '../../models/cart';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { ProductCard } from '../../components/product-card/product-card';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { Product } from '../../models/product';
@@ -17,8 +15,7 @@ import { Product } from '../../models/product';
 })
 export class Shop {
   private cartService = inject(CartService);
-  private cartSignal = signal<ICart[]>([]);
-
+  cartSignal = signal<ICart[]>([]);
   cart = this.cartSignal.asReadonly();
 
   totalPrice = computed(() => {
@@ -28,49 +25,35 @@ export class Shop {
   constructor() {
     this.loadCart();
   }
-  private loadCart() {
-    this.cartService.getCart().subscribe({
-      next: (cart) => {
-        this.cartSignal.set(cart);
-      }
-    })
+
+
+  private async loadCart() {
+    const cart = await this.cartService.getCart();
+    this.cartSignal.set(cart);
   }
 
-  private updateQuantity(cartId: string, quantity: number) {
-    this.cartService.updateQuantity(cartId, quantity).subscribe({
-      next: (updatedCart) => this.cartSignal.update(current => current.map(item => item.id === cartId ? { ...item, quantity: updatedCart.quantity } : item))
-    });
+  async increaseQuantity(cartId: number, quantity: number) {
+    await this.cartService.updateQuantity(cartId, quantity + 1);
+    this.loadCart();
   }
 
-  increaseQuantity(cartId: string, quantity: number) {
-    this.updateQuantity(cartId, quantity + 1);
-  }
-  decreaseQuantity(cartId: string, quantity: number) {
-    this.updateQuantity(cartId, quantity - 1);
+  async decreaseQuantity(cartId: number, quantity: number) {
     if (quantity === 1) {
-      this.remove(cartId)
+      await this.remove(cartId);
+    } else {
+      await this.cartService.updateQuantity(cartId, quantity - 1);
+      this.loadCart();
     }
   }
 
-  // remove(cartId: string) {
-  //   this.cartService.removeFromCart(cartId).subscribe({
-  //     next: () => this.cartSignal.update(current => current.filter(item => item.id !== cartId))
-  //   })
-  // }
-  remove(cartId: string) {
-    this.cartService.removeFromCart(cartId).subscribe({
-      next: () => {
-        this.cartSignal.update(current =>
-          current.filter(item => item.id !== cartId)
-        );
-      }
-    });
+  async remove(cartId: number) {
+    await this.cartService.removeFromCart(cartId);
+    this.loadCart();
   }
 
-  clearCart() {
-    this.cartSignal().forEach((cart) => {
-      this.cartService.removeFromCart(cart.id).subscribe()
-    })
+  async clearCart() {
+    await this.cartService.clearCart();
     this.cartSignal.set([]);
   }
+
 }

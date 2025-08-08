@@ -1,55 +1,93 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment.development';
-import { Product } from '../../models/product';
-import { map, mergeMap, Observable } from 'rxjs';
+import { SupabaseService } from './../supabase/supabase';
+import { Injectable } from '@angular/core';
 import { ICart } from '../../models/cart';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-  private http = inject(HttpClient)
-  private apiUrl = environment.apiUrl
+  constructor(private SupabaseService: SupabaseService) { }
 
-  // getCart(): Observable<Product[]> {
-  //   return this.http.get<Product[]>(`${this.apiUrl}/cart`)
-  // }
+  async getCart(): Promise<ICart[]> {
+    const { data, error } = await this.SupabaseService.client
+      .from('cart')
+      .select(`
+        id,
+        quantity,
+        product:products(*)
+      `);
 
-  getCart(): Observable<ICart[]> {
-    return this.http.get<ICart[]>(`${this.apiUrl}/cart`)
-  }
-  addToCart(cart: Omit<ICart, 'id'>, productId: string): Observable<boolean> {
-    return this.getCart().pipe(
-      mergeMap((carts) => {
-        const existCart = carts.find((item) => item.product.id === productId)
+    if (error) {
+      console.error('Error fetching cart:', error);
+      return [];
+    }
 
-        if (!existCart) {
-          return this.addCart(cart).pipe(
-            map(() => true)
-          )
-        } else {
-          return this.updateQuantity(existCart.id, existCart.quantity + 1).pipe(
-            map(() => false)
-          )
-        }
-      })
-    )
+    return (data || []).map(item => ({
+      id: item.id,
+      quantity: item.quantity,
+      product: Array.isArray(item.product) ? item.product[0] : item.product
+    }));
   }
 
-  addCart(cart: Omit<ICart, 'id'>): Observable<ICart> {
-    return this.http.post<ICart>(`${this.apiUrl}/cart`, cart)
+
+  // Savatga qo‘shish
+  async addToCart(cart: Omit<ICart, 'id'>, productId: number): Promise<boolean> {
+    const existingCart = await this.getCart();
+    const existItem = existingCart.find(item => item.product.id === productId);
+
+    if (!existItem) {
+      await this.addCart(cart);
+      return true;
+    } else {
+      await this.updateQuantity(existItem.id, existItem.quantity + 1);
+      return false;
+    }
   }
 
-  removeFromCart(cartId: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/cart/${cartId}`)
+  // Yangi cart yozish
+  async addCart(cart: Omit<ICart, 'id'>) {
+    const { error } = await this.SupabaseService.client
+      .from('cart')
+      .insert([cart]);
+
+    if (error) {
+      console.error('Error adding cart:', error);
+    }
   }
 
-  clearCart() {
-    return this.http.delete(`${this.apiUrl}/cart`)
+  // Cartdan o‘chirish
+  async removeFromCart(cartId: number) {
+    const { error } = await this.SupabaseService.client
+      .from('cart')
+      .delete()
+      .eq('id', cartId);
+
+    if (error) {
+      console.error('Error removing from cart:', error);
+    }
   }
 
-  updateQuantity(cartId: string, quantity: number): Observable<ICart> {
-    return this.http.patch<ICart>(`${this.apiUrl}/cart/${cartId}`, { quantity })
+  // Cartni tozalash
+  async clearCart() {
+    const { error } = await this.SupabaseService.client
+      .from('cart')
+      .delete()
+      .neq('id', 0); // hamma cartlarni o‘chiradi
+
+    if (error) {
+      console.error('Error clearing cart:', error);
+    }
+  }
+
+  // Quantity yangilash
+  async updateQuantity(cartId: number, quantity: number) {
+    const { error } = await this.SupabaseService.client
+      .from('cart')
+      .update({ quantity })
+      .eq('id', cartId);
+
+    if (error) {
+      console.error('Error updating quantity:', error);
+    }
   }
 }

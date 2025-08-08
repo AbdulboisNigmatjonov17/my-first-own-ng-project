@@ -1,7 +1,7 @@
 import { Product } from "./product";
 
 export interface ICart{
-    id: string;
+    id: number;
     product: Product;
     quantity: number
 }

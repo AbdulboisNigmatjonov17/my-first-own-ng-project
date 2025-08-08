@@ -1,34 +1,25 @@
-import { ProductService } from './../../services/product/product.service';
-
 import { Component, inject, signal } from '@angular/core';
-import { ProductCard } from "../product-card/product-card";
+import { ProductService } from '../../services/product/product.service';
 import { Product } from '../../models/product';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { CartService } from '../../services/cart/cart.service';
+import { ProductCard } from "../product-card/product-card";
 
 @Component({
   selector: 'app-products',
+  standalone: true,
   imports: [ProductCard, CommonModule, MatProgressSpinnerModule],
   templateUrl: './products.html',
-  styleUrls: ['./products.css'],
+  styleUrls: ['./products.css']
 })
 export class Products {
-  ProductService = inject(ProductService);
-  products = toSignal(this.ProductService.getProducts(), { initialValue: [] })
+  private productService = inject(ProductService);
 
-  cartService = inject(CartService)
+  // Signal orqali productlar
+  products = toSignal(this.productService.getProducts(), { initialValue: [] });
 
-  addToCart(product: Product) {
-    const cartItem = {
-      product,
-      quantity: 1
-    }
-
-    this.cartService.addToCart(cartItem, product.id).subscribe({
-      next: (added) => console.log(added),
-      error: (err) => console.log(err)
-    })
+  trackById(index: number, item: Product) {
+    return item.id;
   }
 }

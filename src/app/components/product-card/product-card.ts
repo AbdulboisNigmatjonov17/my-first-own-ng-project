@@ -18,11 +18,14 @@ export class ProductCard {
   @Input() product!: Product;
   private cartService = inject(CartService);
 
-  onSubmit(product: Product): void {
+  async onSubmit(product: Product) {
     const cartItem = { product, quantity: 1 };
-    this.cartService.addToCart(cartItem, product.id).subscribe(() => {
+    try {
+      await this.cartService.addToCart(cartItem, product.id);
       console.log('Product added to cart', product.id);
-    });
+    } catch (err) {
+      console.error('Error adding to cart:', err);
+    }
   }
-
+  
 }
