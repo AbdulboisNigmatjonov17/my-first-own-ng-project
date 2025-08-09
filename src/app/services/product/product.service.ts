@@ -17,7 +17,7 @@ export class ProductService {
         .select('*')
         .then(({ data, error }) => {
           if (error) {
-            console.error('Error fetching products:', error);
+            console.error(error);
             return [];
           }
           return data || [];
@@ -25,6 +25,18 @@ export class ProductService {
     );
   }
 
+  // addProduct(product: Product): Observable<void> {
+  //   return from(
+  //     this.supabaseService.client
+  //       .from<Product>('products')
+  //       .insert([product])
+  //       .then(({ error }) => {
+  //         if (error) {
+  //           console.error('Error adding product:', error);
+  //         }
+  //       })
+  //   );
+  // }
   addProduct(product: Product): Observable<void> {
     return from(
       this.supabaseService.client
@@ -37,4 +49,5 @@ export class ProductService {
         })
     );
   }
+
 }

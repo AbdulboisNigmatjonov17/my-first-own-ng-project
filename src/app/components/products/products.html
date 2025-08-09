@@ -1,15 +1,12 @@
 <main>
-    <div *ngIf="!products().length">
-      <p>No products found</p>
+  <div *ngIf="!products().length">
+    <p>No products found</p>
+  </div>
+
+  <div *ngIf="products().length">
+    <div class="cards">
+      <app-product-card *ngFor="let item of products(); trackBy: trackById" [product]="item">
+      </app-product-card>
     </div>
-  
-    <div *ngIf="products().length">
-      <div class="cards">
-        <app-product-card
-          *ngFor="let item of products(); trackBy: trackById"
-          [product]="item">
-        </app-product-card>
-      </div>
-    </div>
-  </main>
-  
+  </div>
+</main>
